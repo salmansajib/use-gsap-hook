@@ -51,7 +51,7 @@ function App() {
       delay: 0.4,
     });
 
-    // animate the box
+    // animate the circle
     gsap.from(".circle", {
       opacity: 0,
       x: 200,
@@ -118,7 +118,7 @@ function App() {
       {/* Dot Element */}
       <div
         ref={dotRef}
-        className="z-10 absolute -top-3 w-5 h-5 border-[3px] border-gray-100  rounded-full pointer-events-none"
+        className="z-10 absolute -top-3 w-[13px] h-[13px] bg-gray-100 rounded-full pointer-events-none shadow-lg shadow-slate-50"
         style={{ transform: "translate(-50%, -50%)" }}
       ></div>
 
