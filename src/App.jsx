@@ -1,14 +1,20 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 function App() {
-  const firstContainer = useRef();
-  const circle = useRef();
-  const animateButton = useRef();
-  const secondContainer = useRef();
-  const dotRef = useRef();
+  const firstContainer = useRef(null);
+  const circle = useRef(null);
+  const animateButton = useRef(null);
+  const secondContainer = useRef(null);
+  const dotRef = useRef(null);
+  const titleContainerRef = useRef(null);
+
   const [isAnimating, setIsAnimating] = useState(false);
+
+  // register the scroll trigger plugin
+  gsap.registerPlugin(ScrollTrigger);
 
   // most common approach in react on click animation with auto clean-up
   const { contextSafe } = useGSAP();
@@ -98,7 +104,7 @@ function App() {
     gsap.to(dotRef.current, {
       x: e.clientX,
       y: e.clientY,
-      duration: 0.3,
+      duration: 0.5,
       delay: 0.05,
       ease: "power3",
     });
@@ -113,51 +119,79 @@ function App() {
     };
   }, []);
 
+  // scroll trigger animation for title container
+  useGSAP(() => {
+    gsap.from(titleContainerRef.current.children, {
+      opacity: 0,
+      y: 100,
+      stagger: 0.4,
+      duration: 1.5,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: titleContainerRef.current,
+        start: "top 100%", // Trigger animation when top of the element reaches 100% of the viewport height
+        end: "bottom 50%", // End animation when bottom of the element reaches 20% of the viewport height
+        toggleActions: "play none none none", // Play the animation on scroll and do nothing on reverse
+      },
+    });
+  });
+
   return (
-    <div className="bg-zinc-950 text-gray-100 min-h-dvh grid place-content-center overflow-hidden">
+    <div className="bg-zinc-950 text-gray-100 relative">
       {/* Dot Element */}
       <div
         ref={dotRef}
-        className="z-10 absolute -top-3 w-[13px] h-[13px] bg-gray-100 rounded-full pointer-events-none shadow-lg shadow-slate-50"
+        className="hidden md:block z-10 fixed -top-3 w-[13px] h-[13px] bg-gray-100 rounded-full pointer-events-none shadow-lg shadow-slate-50"
         style={{ transform: "translate(-50%, -50%)" }}
       ></div>
 
-      <div
-        ref={animateButton}
-        onMouseMove={handleButtonMouseMove}
-        onMouseLeave={handleButtonMouseLeave}
-        className=" absolute top-[100px] left-1/2 -translate-x-1/2"
-      >
-        <button
-          onClick={onClickAnimation}
-          className="border-2 outline-none border-gray-100 font-semibold text-gray-100 px-9 py-3 rounded-full hover:bg-gray-100 hover:text-zinc-900 transition-all duration-200 overflow-hidden"
+      <div className="relative min-h-screen grid place-content-center">
+        <div
+          ref={animateButton}
+          onMouseMove={handleButtonMouseMove}
+          onMouseLeave={handleButtonMouseLeave}
+          className=" absolute top-[100px] left-1/2 -translate-x-1/2"
         >
-          Click To Animate
-        </button>
-      </div>
-      <div className="flex flex-col items-center gap-[100px]">
-        <div ref={firstContainer} className="flex gap-10">
-          <div className="box w-[100px] h-[100px] bg-gradient-to-br from-blue-200 to-blue-400 rounded-lg text-zinc-900 text-[16px] font-medium flex items-center justify-center">
-            Selector
-          </div>
-          <div
-            ref={circle}
-            className="circle w-[100px] h-[100px] bg-gradient-to-br from-green-200 to-green-500 rounded-full text-zinc-900 text-[16px] font-medium flex items-center justify-center"
+          <button
+            onClick={onClickAnimation}
+            className="border-2 outline-none border-gray-100 font-semibold text-gray-100 px-9 py-3 rounded-full hover:bg-gray-100 hover:text-zinc-900 transition-all duration-200 overflow-hidden"
           >
-            Ref
+            Click To Animate
+          </button>
+        </div>
+        <div className="flex flex-col items-center gap-[100px]">
+          <div ref={firstContainer} className="flex gap-10">
+            <div className="box w-[100px] h-[100px] bg-gradient-to-br from-blue-200 to-blue-400 rounded-lg text-zinc-900 text-[16px] font-medium flex items-center justify-center">
+              Selector
+            </div>
+            <div
+              ref={circle}
+              className="circle w-[100px] h-[100px] bg-gradient-to-br from-green-200 to-green-500 rounded-full text-zinc-900 text-[16px] font-medium flex items-center justify-center"
+            >
+              Ref
+            </div>
+          </div>
+
+          <div ref={secondContainer} className="flex items-center gap-2">
+            {[...Array(5)].map((_, index) => (
+              <div
+                key={index}
+                className="w-[70px] h-[70px] rounded-full bg-gradient-to-tr from-lime-200 to-lime-500 flex items-center justify-center text-zinc-900 font-semibold text-lg"
+              >
+                {index + 1}
+              </div>
+            ))}
           </div>
         </div>
+      </div>
 
-        <div ref={secondContainer} className="flex items-center gap-2">
-          {[...Array(5)].map((_, index) => (
-            <div
-              key={index}
-              className="w-[70px] h-[70px] rounded-full bg-gradient-to-tr from-lime-200 to-lime-500 flex items-center justify-center text-zinc-900 font-semibold text-lg"
-            >
-              {index + 1}
-            </div>
-          ))}
-        </div>
+      <div
+        ref={titleContainerRef}
+        className="text-center py-[200px] space-y-[20px]"
+      >
+        <h1 className=" text-8xl font-semibold">I Am</h1>
+        <h1 className=" text-8xl font-semibold">Animating</h1>
+        <h1 className=" text-8xl font-semibold">On Scroll</h1>
       </div>
     </div>
   );
