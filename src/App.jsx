@@ -124,14 +124,16 @@ function App() {
     gsap.from(titleContainerRef.current.children, {
       opacity: 0,
       y: 100,
-      stagger: 0.4,
-      duration: 1.5,
+      stagger: 0.3,
+      duration: 1,
+      delay: 0.5,
       ease: "power3.out",
       scrollTrigger: {
         trigger: titleContainerRef.current,
-        start: "top 100%", // Trigger animation when top of the element reaches 100% of the viewport height
-        end: "bottom 50%", // End animation when bottom of the element reaches 20% of the viewport height
-        toggleActions: "play none none none", // Play the animation on scroll and do nothing on reverse
+        start: "top 50%",
+        end: "bottom 20%",
+        toggleActions: "play none none none",
+        markers: true,
       },
     });
   });
@@ -183,15 +185,20 @@ function App() {
             ))}
           </div>
         </div>
+
+        <div></div>
       </div>
 
       <div
         ref={titleContainerRef}
-        className="text-center py-[200px] space-y-[20px]"
+        className=" min-h-screen grid place-content-center"
       >
-        <h1 className=" text-8xl font-semibold">I Am</h1>
-        <h1 className=" text-8xl font-semibold">Animating</h1>
-        <h1 className=" text-8xl font-semibold">On Scroll</h1>
+        <h1 className=" text-5xl md:text-8xl font-bold text-transparent bg-gradient-to-r from-green-300 to-lime-300 bg-clip-text max-w-max h-[50px] md:h-[110px]">
+          Animating
+        </h1>
+        <h1 className=" text-5xl md:text-8xl font-bold text-transparent bg-gradient-to-r from-green-300 to-lime-300 bg-clip-text max-w-max">
+          On Scroll
+        </h1>
       </div>
     </div>
   );
