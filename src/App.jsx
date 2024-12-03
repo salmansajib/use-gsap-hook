@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { IoIosArrowDown } from "react-icons/io";
 
 function App() {
   const firstContainer = useRef(null);
@@ -10,6 +11,7 @@ function App() {
   const secondContainer = useRef(null);
   const dotRef = useRef(null);
   const titleContainerRef = useRef(null);
+  const arrowRef = useRef(null);
 
   const [isAnimating, setIsAnimating] = useState(false);
 
@@ -74,6 +76,15 @@ function App() {
       duration: 1,
       delay: 1.2,
       ease: "power3",
+    });
+
+    // animate the arrow, scroll indicator
+    gsap.to(arrowRef.current, {
+      y: 12,
+      repeat: -1,
+      yoyo: true,
+      duration: 0.8,
+      ease: "power1.inOut",
     });
   });
 
@@ -186,14 +197,18 @@ function App() {
           </div>
         </div>
 
-        <div></div>
+        <div className="absolute bottom-[50px] left-1/2 -translate-x-1/2 w-[25px] h-[40px] border-2 border-gray-50 rounded-full flex items-start justify-center">
+          <div ref={arrowRef} className="py-[2px]">
+            <IoIosArrowDown size={20} />
+          </div>
+        </div>
       </div>
 
       <div
         ref={titleContainerRef}
-        className=" min-h-screen grid place-content-center"
+        className="min-h-screen bg-slate-950 grid place-content-center"
       >
-        <h1 className=" text-5xl md:text-8xl font-bold text-transparent bg-gradient-to-r from-green-300 to-lime-300 bg-clip-text max-w-max h-[50px] md:h-[110px]">
+        <h1 className=" text-5xl md:text-8xl font-bold text-transparent bg-gradient-to-r from-green-300 to-lime-300 bg-clip-text max-w-max h-[55px] md:h-[110px]">
           Animating
         </h1>
         <h1 className=" text-5xl md:text-8xl font-bold text-transparent bg-gradient-to-r from-green-300 to-lime-300 bg-clip-text max-w-max">
